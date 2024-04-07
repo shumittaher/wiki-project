@@ -1,1 +1,1 @@
-Cat is a feline animal.
+Cats are feline animals which can be easily domesticated.

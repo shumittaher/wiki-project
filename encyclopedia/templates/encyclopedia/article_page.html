@@ -6,6 +6,18 @@
 
 {% block body %}
 
-    {{title}}
+    <h1>
+        {{title}}
+    </h1>
+
+    <p>
+        {{content}}
+    </p>
+
+    <button>
+        <a href="/edit/{{title}}">
+            Edit This Page
+        </a>
+    </button>
 
 {% endblock %}

@@ -40,10 +40,11 @@ def search(request):
 
 def title(request, title):
     
-    title = util.get_entry(title)
+    content = util.get_entry(title)
 
     return render(request, "encyclopedia/article_page.html", {
-        "title": title
+        "content": content,
+        "title" : title
     })
  
 def new(request):
@@ -54,16 +55,43 @@ def new(request):
         if form_data.is_valid():
             title = form_data.cleaned_data["title"]
             content = form_data.cleaned_data["content"]
-            util.save_entry(title, content)
-            messages.add_message(request, messages.INFO, "Entry Added")
 
-            get_messages(request)
+            if util.get_entry(title):
+                messages.add_message(request, messages.ERROR, "Entry Already Exists")
 
+            else: 
+                util.save_entry(title, content)
+                return HttpResponseRedirect(reverse("title", kwargs={'title':title})) 
 
     creation_form = NewEntryForm()
     return render(request, "encyclopedia/create_new.html", {
         'creation_form' : creation_form
     })
+
+def edit(request, title):
+
+    initial_data = {
+        'title': title,
+        'content': util.get_entry(title)
+        }
+
+    edit_form = NewEntryForm(initial=initial_data)
+
+    return render(request, "encyclopedia/edit_page.html",{
+        'edit_form': edit_form
+    })
+
+def edit_post(request):
+
+    if request.method == 'POST':
+        form_data = NewEntryForm(request.POST)
+
+        if form_data.is_valid():
+            title = form_data.cleaned_data["title"]
+            content = form_data.cleaned_data["content"]
+            util.save_entry(title, content)
+            return HttpResponseRedirect(reverse("title", kwargs={'title':title})) 
+
 
 class NewEntryForm(forms.Form):
     title = forms.CharField(label = "Title", max_length=100)
