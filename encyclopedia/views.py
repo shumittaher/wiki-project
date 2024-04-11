@@ -1,10 +1,11 @@
+import random
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django import forms
 from django.contrib import messages
 from django.contrib.messages import get_messages
-
+from markdown2 import Markdown
 
 
 
@@ -41,9 +42,11 @@ def search(request):
 def title(request, title):
     
     content = util.get_entry(title)
+    markdowner = Markdown()
+    result = markdowner.convert(content)
 
     return render(request, "encyclopedia/article_page.html", {
-        "content": content,
+        "content": result,
         "title" : title
     })
  
@@ -63,7 +66,11 @@ def new(request):
                 util.save_entry(title, content)
                 return HttpResponseRedirect(reverse("title", kwargs={'title':title})) 
 
-    creation_form = NewEntryForm()
+    form = NewEntryForm()
+
+    creation_form = form.render("encyclopedia/form_snippet.html")
+
+
     return render(request, "encyclopedia/create_new.html", {
         'creation_form' : creation_form
     })
@@ -75,7 +82,8 @@ def edit(request, title):
         'content': util.get_entry(title)
         }
 
-    edit_form = NewEntryForm(initial=initial_data)
+    form = NewEntryForm(initial=initial_data)
+    edit_form = form.render("encyclopedia/form_snippet.html")
 
     return render(request, "encyclopedia/edit_page.html",{
         'edit_form': edit_form
@@ -93,6 +101,14 @@ def edit_post(request):
             return HttpResponseRedirect(reverse("title", kwargs={'title':title})) 
 
 
+def random_page(request):
+
+    available_entries = util.list_entries()
+    title = available_entries[random.randint(0,len(available_entries)-1)]
+
+    return HttpResponseRedirect(reverse("title", kwargs={'title':title})) 
+
+
 class NewEntryForm(forms.Form):
     title = forms.CharField(label = "Title", max_length=100)
-    content = forms.CharField(widget=forms.Textarea)
+    content = forms.CharField(widget=forms.Textarea, label= "Content")
