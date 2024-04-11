@@ -1,6 +1,7 @@
 body {
     margin: 0;
     background-color: white;
+
 }
 
 code {
@@ -28,7 +29,7 @@ textarea {
 }
 
 .sidebar {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     height: 100vh;
     padding: 20px;
 }
