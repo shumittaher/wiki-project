@@ -112,4 +112,4 @@ def random_page(request):
 class NewEntryForm(forms.Form):
     title = forms.CharField(label = "Title", max_length=100, widget=forms.TextInput(attrs={"class": "form-control-lg form-control"}))
 
-    content = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control"}), label= "Content")
+    content = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control", "style": "height: 50vh;"}), label= "Content")
