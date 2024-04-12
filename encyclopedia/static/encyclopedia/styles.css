@@ -29,11 +29,16 @@ textarea {
 }
 
 .sidebar {
-    background-color: #ffffff;
+    background-color: #f0f0f0;
     height: 100vh;
     padding: 20px;
 }
 
 .sidebar h2 {
     margin-top: 5px;
+}
+
+.article_form{
+    width: 90%;
+
 }
