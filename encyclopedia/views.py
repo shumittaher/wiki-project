@@ -106,7 +106,7 @@ def edit_post(request):
             return HttpResponseRedirect(reverse("title", kwargs={'title':title})) 
 
 
-def random_page():
+def random_page(request):
 
     available_entries = util.list_entries()
     title = available_entries[random.randint(0,len(available_entries)-1)]
