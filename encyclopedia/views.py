@@ -42,8 +42,13 @@ def search(request):
 def title(request, title):
     
     content = util.get_entry(title)
-    markdowner = Markdown()
-    result = markdowner.convert(content)
+
+    if content:
+        markdowner = Markdown()
+        result = markdowner.convert(content)
+    
+    else:
+        return HttpResponseRedirect(reverse("not_found"))
 
     return render(request, "encyclopedia/article_page.html", {
         "content": result,
@@ -101,13 +106,15 @@ def edit_post(request):
             return HttpResponseRedirect(reverse("title", kwargs={'title':title})) 
 
 
-def random_page(request):
+def random_page():
 
     available_entries = util.list_entries()
     title = available_entries[random.randint(0,len(available_entries)-1)]
 
     return HttpResponseRedirect(reverse("title", kwargs={'title':title})) 
 
+def not_found(request):
+    return render(request, "encyclopedia/404.html")
 
 class NewEntryForm(forms.Form):
     title = forms.CharField(label = "Title", max_length=100, widget=forms.TextInput(attrs={"class": "form-control-lg form-control"}))
